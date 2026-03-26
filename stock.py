@@ -22,3 +22,13 @@ def get_stock_info(ticker):
 # 사용자 입력
 ticker = input("종목 코드 입력 (예: AAPL, TSLA, 005930.KS): ")
 get_stock_info(ticker)
+
+if change > 0:
+    print("📈 상승")
+else:
+    print("📉 하락")
+    
+import matplotlib.pyplot as plt
+
+data['Close'].plot(title=f"{ticker} 주가 그래프")
+plt.show()
