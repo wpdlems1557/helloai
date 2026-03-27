@@ -1,34 +1,13 @@
+import mplfinance as mpf
 import yfinance as yf
-import matplotlib.pyplot as plt
+from pandas_datareader import data as pdr
+import yfinance as yf
 
-def get_stock_info(ticker):
-    stock = yf.Ticker(ticker)
-    data = stock.history(period="5d") # 흐름을 보기 위해 5일치로 변경 권장
+yf.pdr_override()
 
-    if len(data) < 2:
-        print("데이터를 가져올 수 없습니다.")
-        return None, None, None
-
-    yesterday = data['Close'].iloc[-2]
-    today = data['Close'].iloc[-1]
-    change = today - yesterday
-    percent = (change / yesterday) * 100
-    
-    return data, change, today, percent
-
-ticker = input("종목 코드 입력: ")
-data, change, today, percent = get_stock_info(ticker)
-
-if data is not None:
-    print(f"\n📊 {ticker} 주식 정보")
-    print(f"현재가: {today:.2f}")
-    print(f"전일 대비: {change:.2f}")
-    print(f"변동률: {percent:.2f}%")
-
-    if change > 0:
-        print("📈 상승")
-    else:
-        print("📉 하락")
-        
-    data['Close'].plot(title=f"{ticker} Stock Price")
-    plt.show()
+data = pdr.get_data_yahoo("005930.KS", start="2026-01-01", end="2026-3-26")
+print(data)
+# mpf.plot(data, type= "candle")   # mpf.plot(data, type= [line, candle])
+mc = mpf.make_marketcolors(up="r", down="b")
+s = mpf.make_mpf_style(base_mpf_style='starsandstripes', marketcolors=mc)
+mpf.plot(data, type='candle', style=s, volume=True, mav=(5,10,60))
